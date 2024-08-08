@@ -16,25 +16,7 @@ The user documentation contains the necessary information about the development 
 ### Write your own circuit
 
 1) Read [documentation](https://docs.zkfold.io/) on writing circuits on zkFold Symbolic.
-1) Write your own circuit with zkFold Symbolic (or import it from [example](https://github.com/zkFold/zkfold-base/tree/main/examples)).
-2) Compile circuit with `compileIO` to scriptFile.
-3) Import circuit to off-chain zkfold-ethereum. (in progress)
-
-### Deploy circuit with our smart contract
-
-1) Choose a suitable smart contract such as a plonk or symbolic. (in progress)
-
-```solidity
-// Solidity script (minting policy) for verifying computations on-chain.
-contract PlonkToken {
-  // The token is minted if and only if the Plonk `proof` is valid for the `computation` on the `input` derived from the token name.
-  function _mint(bytes memory computation, bytes memory input, bytes memory proof) public {
-    // mining
-  }
-}
-```
-
-2) Compile the circuit with our smart contract. (in progress)
+1) Write your own circuit with zkFold Symbolic (or import it from [example](https://github.com/zkFold/zkfold-base/tree/main/examples)). (support solidity in progress)
 
 What zkFold Symbolic circuit will look like.
 ```haskell
@@ -61,6 +43,24 @@ batchTransfer tx transfers =
     in condition1 && condition2 && condition3
 ```
 
+2) Compile circuit with `compileIO` to scriptFile.
+3) Import circuit to off-chain zkfold-ethereum. (in progress)
+
+### Deploy circuit with our smart contract
+
+1) Choose a suitable smart contract such as a plonk or symbolic. (in progress)
+
+```solidity
+// Solidity script (minting policy) for verifying computations on-chain.
+contract PlonkToken {
+  // The token is minted if and only if the Plonk `proof` is valid for the `computation` on the `input` derived from the token name.
+  function _mint(bytes memory computation, bytes memory input, bytes memory proof) public {
+    // mining
+  }
+}
+```
+
+2) Compile the circuit with our smart contract. (in progress)
 3) Deploy it on the blockchain. (in progress)
 
 ### Write your own smart contracts on top of our L1 ecosystem
