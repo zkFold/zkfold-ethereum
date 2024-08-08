@@ -22,7 +22,12 @@ contract PlonkToken {
 ```solidity
 // Solidity script for verifying a ZkFold Symbolic smart contract on the current transaction.
 contract Symbolic {
-  // ...
+  function deposit() external payable {
+    // ...
+  }
+  function withdraw(uint256 amount) external {
+    // ...
+  }
 }
 ```
 
