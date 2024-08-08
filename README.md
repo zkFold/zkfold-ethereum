@@ -7,7 +7,7 @@ Integration of zkFold Symbolic smart contracts with the Ethereum blockchain. The
 
 The smart contract specification defines the intended behavior of the on-chain code, namely the zkFold Symbolic verifier contract.
 
-[specification](https://github.com/zkFold/zkfold-ethereum/tree/init-docs/e2e-test/specification)
+[specification](https://github.com/zkFold/zkfold-ethereum/tree/main/e2e-test/specification)
 
 ```solidity
 // Solidity script (minting policy) for verifying computations on-chain.
