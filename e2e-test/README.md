@@ -12,12 +12,12 @@ Here we will describe bash scripts for executing transactions.
 
 ### Plonk
 
-[plonk specification](https://github.com/zkFold/zkfold-ethereum/tree/init-docs/e2e-test/specification/plonk)
+[plonk specification](https://github.com/zkFold/zkfold-ethereum/tree/main/e2e-test/specification/plonk)
 
 plonk cli: (in progress)
 
 ### Symbolic
 
-[symbolic specification](https://github.com/zkFold/zkfold-ethereum/tree/init-docs/e2e-test/specification/symbolic)
+[symbolic specification](https://github.com/zkFold/zkfold-ethereum/tree/main/e2e-test/specification/symbolic)
 
 symbolic cli: (in progress)
