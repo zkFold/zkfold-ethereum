@@ -35,6 +35,10 @@ contract Symbolic {
 
 The user documentation contains the necessary information about the development of ZK smart contracts using zkFold Symbolic in application to Ethereum blockchain.
 
+### What is zkFold Symbolic?
+
+zkFold Symbolic is a subset of Haskell compilable to arithmetic circuits. It is, therefore, a high-level functional programming language that allows developers to harness the power of zero knowledge protocols for their trustless, decentralized, and privacy-preserving applications. It aims to reduce the barrier to entry in the development of zk-enhanced applications and smart contracts.
+
 ### Write your own circuit
 
 1) Read [documentation](https://docs.zkfold.io/) on writing circuits on zkFold Symbolic.
