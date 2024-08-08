@@ -9,6 +9,23 @@ The smart contract specification defines the intended behavior of the on-chain c
 
 [specification](https://github.com/zkFold/zkfold-ethereum/tree/init-docs/e2e-test/specification)
 
+```solidity
+// Solidity script (minting policy) for verifying computations on-chain.
+contract PlonkToken {
+  // The token is minted if and only if the Plonk `proof` is valid for the `computation` on the `input` derived from the token name.
+  function _mint(bytes memory computation, bytes memory input, bytes memory proof) public {
+    // minting
+  }
+}
+```
+
+```solidity
+// Solidity script for verifying a ZkFold Symbolic smart contract on the current transaction.
+contract Symbolic {
+  // ...
+}
+```
+
 ## User documentation for zkFold Symbolic circuits
 
 The user documentation contains the necessary information about the development of ZK smart contracts using zkFold Symbolic in application to Ethereum blockchain.
@@ -55,7 +72,7 @@ batchTransfer tx transfers =
 contract PlonkToken {
   // The token is minted if and only if the Plonk `proof` is valid for the `computation` on the `input` derived from the token name.
   function _mint(bytes memory computation, bytes memory input, bytes memory proof) public {
-    // mining
+    // ...
   }
 }
 ```
@@ -66,4 +83,12 @@ contract PlonkToken {
 ### Write your own smart contracts on top of our L1 ecosystem
 
 1) Write your own smart contracts with business logic.
+
+```solidity
+// Solidity spending script that forwards verification to a burning script.
+contract ForwardingMint {
+  // ...
+}
+```
+
 2) Deploy it on the blockchain.
