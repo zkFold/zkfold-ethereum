@@ -2,12 +2,21 @@
 Integration of zkFold Symbolic smart contracts with the Ethereum blockchain. The repository contains
 - the smart contract specification;
 - user documentation for zkFold Symbolic circuits;
+- solidity implementation of the verifier contracts (in progress).
 
-## Smart contract specification
+## User documentation for zkFold Symbolic circuits
 
-The smart contract specification defines the intended behavior of the on-chain code, namely the zkFold Symbolic verifier contract.
+The user documentation contains the necessary information about the development of ZK smart contracts using zkFold Symbolic in application to the Ethereum blockchain.
 
-[specification](https://github.com/zkFold/zkfold-ethereum/tree/main/e2e-test/specification)
+### What is zkFold Symbolic?
+
+zkFold Symbolic is a subset of Haskell compilable to arithmetic circuits. It is, therefore, a high-level functional programming language that allows developers to harness the power of zero knowledge protocols for their trustless, decentralized, and privacy-preserving applications. It aims to reduce the barrier to entry in the development of zk-enhanced applications and smart contracts.
+
+### On-chain verifier specifications
+
+zkFold Symbolic smart contracts can be verified on-chain using a ZK verifier contract. Currently, we provide two verifier contracts: _Plonk_ and _Symbolic_. The difference between those on-chain contracts lies in how the public inputs to the ZK verification protocol are defined. Namely, Plonk verifier contract verifies the statement with the public input provided by the user, while Symbolic verifier contract verifies the statement with the public input derived from the state of the contract as well as transaction data.
+
+You can find the Plonk verifier specification [here](https://github.com/zkFold/zkfold-ethereum/tree/main/e2e-test/specification/plonk/main.pdf). Below is the snippet of the Solidity script for the Plonk verifier contract:
 
 ```solidity
 // Solidity script (minting policy) for verifying computations on-chain.
@@ -18,6 +27,8 @@ contract PlonkToken {
   }
 }
 ```
+
+You can find the Symbolic verifier specification [here](https://github.com/zkFold/zkfold-ethereum/tree/main/e2e-test/specification/symbolic/main.pdf). Below is the snippet of the Solidity script for the Symbolic verifier contract:
 
 ```solidity
 // Solidity script for verifying a ZkFold Symbolic smart contract on the current transaction.
@@ -31,20 +42,12 @@ contract Symbolic {
 }
 ```
 
-## User documentation for zkFold Symbolic circuits
-
-The user documentation contains the necessary information about the development of ZK smart contracts using zkFold Symbolic in application to Ethereum blockchain.
-
-### What is zkFold Symbolic?
-
-zkFold Symbolic is a subset of Haskell compilable to arithmetic circuits. It is, therefore, a high-level functional programming language that allows developers to harness the power of zero knowledge protocols for their trustless, decentralized, and privacy-preserving applications. It aims to reduce the barrier to entry in the development of zk-enhanced applications and smart contracts.
-
 ### Write your own circuit
 
-1) Read [documentation](https://docs.zkfold.io/) on writing circuits on zkFold Symbolic.
-1) Write your own circuit with zkFold Symbolic (or import it from [example](https://github.com/zkFold/zkfold-base/tree/main/examples)). (support solidity in progress)
+1) Read the [documentation](https://docs.zkfold.io/) on writing zkFold Symbolic circuits.
+1) Write your own circuit with zkFold Symbolic (or import one of the [examples](https://github.com/zkFold/zkfold-base/tree/main/examples)). (Ethereum support is in progress)
 
-What zkFold Symbolic circuit will look like.
+An example of a zkFold Symbolic smart contract:
 ```haskell
 batchTransfer ::
     forall context.  Sig context
@@ -69,35 +72,12 @@ batchTransfer tx transfers =
     in condition1 && condition2 && condition3
 ```
 
-2) Compile circuit with `compileIO` to scriptFile.
-3) Import circuit to off-chain zkfold-ethereum. (in progress)
+### Deploy a zkFold Symbolic smart contract on Ethereum
 
-### Deploy circuit with our smart contract
+1) Choose a suitable on-chain verifier such as Plonk or Symbolic. (in progress)
+2) Compile the circuit and write it to a file with `compileIO`.
+3) Post the zkFold Symbolic smart contract on Ethereum by deploying it as a ZK verifier contract for the circuit. (in progress)
 
-1) Choose a suitable smart contract such as a plonk or symbolic. (in progress)
+### Use our API to interact with zkFold Symbolic smart contracts
 
-```solidity
-// Solidity script (minting policy) for verifying computations on-chain.
-contract PlonkToken {
-  // The token is minted if and only if the Plonk `proof` is valid for the `computation` on the `input` derived from the token name.
-  function _mint(bytes memory computation, bytes memory input, bytes memory proof) public {
-    // ...
-  }
-}
-```
-
-2) Compile the circuit with our smart contract. (in progress)
-3) Deploy it on the blockchain. (in progress)
-
-### Write your own smart contracts on top of our L1 ecosystem
-
-1) Write your own smart contracts with business logic.
-
-```solidity
-// Solidity spending script that forwards verification to a burning script.
-contract ForwardingMint {
-  // ...
-}
-```
-
-2) Deploy it on the blockchain.
+(in progress)
