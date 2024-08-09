@@ -80,4 +80,9 @@ batchTransfer tx transfers =
 
 ### Use our API to interact with zkFold Symbolic smart contracts
 
-(in progress)
+Plonk verifier contract API (in progress):
+- `mint`: mints a token if the Plonk proof is valid for the computation on the input derived from the token name.
+
+Symbolic verifier contract API (in progress):
+- `deposit`: deposits funds to the contract;
+- `withdraw`: withdraws funds from the contract.
