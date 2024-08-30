@@ -14,31 +14,15 @@ zkFold Symbolic is a subset of Haskell compilable to arithmetic circuits. It is,
 
 ### On-chain verifier specifications
 
-zkFold Symbolic smart contracts can be verified on-chain using a ZK verifier contract. Currently, we provide two verifier contracts: _Plonk_ and _Symbolic_. The difference between those on-chain contracts lies in how the public inputs to the ZK verification protocol are defined. Namely, Plonk verifier contract verifies the statement with the public input provided by the user, while Symbolic verifier contract verifies the statement with the public input derived from the state of the contract as well as transaction data.
-
-You can find the Plonk verifier specification [here](https://github.com/zkFold/zkfold-ethereum/tree/main/e2e-test/specification/plonk/main.pdf). Below is the snippet of the Solidity script for the Plonk verifier contract:
-
-```solidity
-// Solidity script (minting policy) for verifying computations on-chain.
-contract PlonkToken {
-  // The token is minted if and only if the Plonk `proof` is valid for the `computation` on the `input` derived from the token name.
-  function _mint(bytes memory computation, bytes memory input, bytes memory proof) public {
-    // minting
-  }
-}
-```
+zkFold Symbolic smart contract can be verified on-chain using a ZK verifier contract. Currently, we provide verifier contract _Symbolic_. Namely, Symbolic verifier contract verifies the statement with the public input derived from the state of the contract as well as transaction data.
 
 You can find the Symbolic verifier specification [here](https://github.com/zkFold/zkfold-ethereum/tree/main/e2e-test/specification/symbolic/main.pdf). Below is the snippet of the Solidity script for the Symbolic verifier contract:
 
 ```solidity
 // Solidity script for verifying a ZkFold Symbolic smart contract on the current transaction.
-contract Symbolic {
-  function deposit() external payable {
-    // ...
-  }
-  function withdraw(uint256 amount) external {
-    // ...
-  }
+interface SymboicERC20 {
+  function _deposit(address _from, IERC20 _token, uint256 _amount) internal returns (uint256);
+  function withdraw(uint256 _amount,  address _l1Token, address _l1Receiver) external {}
 }
 ```
 
@@ -74,14 +58,11 @@ batchTransfer tx transfers =
 
 ### Deploy a zkFold Symbolic smart contract on Ethereum
 
-1) Choose a suitable on-chain verifier such as Plonk or Symbolic. (in progress)
+1) Choose a suitable on-chain verifier Symbolic. (in progress)
 2) Compile the circuit and write it to a file with `compileIO`.
 3) Post the zkFold Symbolic smart contract on Ethereum by deploying it as a ZK verifier contract for the circuit. (in progress)
 
-### Use our API to interact with zkFold Symbolic smart contracts
-
-Plonk verifier contract API (in progress):
-- `mint`: mints a token if the Plonk proof is valid for the computation on the input derived from the token name.
+### Use our API to interact with zkFold Symbolic smart contract
 
 Symbolic verifier contract API (in progress):
 - `deposit`: deposits funds to the contract;
