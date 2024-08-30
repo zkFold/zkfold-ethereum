@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "@openzeppelin/cli": "^2.8.2",
+    "@openzeppelin/contracts": "^5.0.2"
+  },
+  "name": "symbolic",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "hardhat": "^2.22.9"
+  }
+}
