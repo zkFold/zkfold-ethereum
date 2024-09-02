@@ -7,7 +7,7 @@ pragma solidity >=0.7.0 < 0.9.0;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-contract SymboicERC20 {
+contract SymbolicERC20 {
     event PlonkToken(
         address indexed from,
         address l1Token,

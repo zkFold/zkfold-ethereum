@@ -3,7 +3,7 @@
 pragma solidity >=0.7.0 < 0.9.0;
 
 import "./Bn254.sol";
-import "./Transcipt.sol";
+import "./Transcript.sol";
 
 struct Setup {
     uint256 n;

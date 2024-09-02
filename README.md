@@ -20,7 +20,7 @@ You can find the Symbolic verifier specification [here](https://github.com/zkFol
 
 ```solidity
 // Solidity script for verifying a ZkFold Symbolic smart contract on the current transaction.
-interface SymboicERC20 {
+interface SymbolicERC20 {
   function _deposit(address _from, IERC20 _token, uint256 _amount) internal returns (uint256);
   function withdraw(uint256 _amount,  address _l1Token, address _l1Receiver) external {}
 }
