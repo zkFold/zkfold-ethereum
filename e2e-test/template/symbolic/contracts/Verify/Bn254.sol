@@ -62,11 +62,18 @@ library Bn254 {
         return Fr({value: result[0]});
     }
 
-    function newG1Checked(uint256 x, uint256 y) internal pure returns (G1Point memory) {
-        if (x == 0 && y == 0) {
-            return G1Point(x, y);
-        }
+    function newG2Checked(uint256 x1, uint256 x2, uint256 y1, uint256 y2) internal pure returns (G2Point memory p) {
+        G1Point memory g1 = newG1Checked(x1, y1);
+        G1Point memory g2 = newG1Checked(x2, y2);
+        p.X[0] = g1.X;
+        p.X[1] = g2.X;
+        p.Y[0] = g1.Y;
+        p.Y[1] = g2.Y;
 
+        return p;
+    }
+
+    function newG1Checked(uint256 x, uint256 y) internal pure returns (G1Point memory) {
         require(x < qMod);
         require(y < qMod);
 

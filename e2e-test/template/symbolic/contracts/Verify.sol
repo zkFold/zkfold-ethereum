@@ -6,13 +6,59 @@ import "./Verify/Bn254.sol";
 import "./Verify/Transcript.sol";
 import "./Verify/InternalVerifier.sol";
 
-contract VerifierWithDeserialize is InternalVerifier {
+contract Verifier is InternalVerifier {
 
     using Bn254 for Fr;
     using Bn254 for G1Point;
     using Bn254 for G2Point;
 
     using Update for Transcript;
+
+    function deserializeSetup(uint256[] memory serializedSetup)
+        internal
+        pure
+        returns (Setup memory setup)
+    {
+        require(serializedSetup.length == 24);
+
+        uint256 j = 0;
+
+        setup.n = serializedSetup[j];
+        j += 1;
+        setup.power = serializedSetup[j];
+        j += 1;
+        setup.x2 = Bn254.newG2Checked(serializedSetup[j], serializedSetup[j + 1], serializedSetup[j + 2], serializedSetup[j + 3]);
+        j += 4;
+        setup.omega = Bn254.newFr(serializedSetup[j]);
+        j += 1;
+        setup.k1 = Bn254.newFr(serializedSetup[j]);
+        j += 1;
+        setup.k2 = Bn254.newFr(serializedSetup[j]);
+        j += 1;
+
+        setup.cmQl = Bn254.newG1Checked(serializedSetup[j], serializedSetup[j + 1]);
+        j += 2;
+
+        setup.cmQr = Bn254.newG1Checked(serializedSetup[j], serializedSetup[j + 1]);
+        j += 2;
+
+        setup.cmQo = Bn254.newG1Checked(serializedSetup[j], serializedSetup[j + 1]);
+        j += 2;
+
+        setup.cmQm = Bn254.newG1Checked(serializedSetup[j], serializedSetup[j + 1]);
+        j += 2;
+
+        setup.cmQc = Bn254.newG1Checked(serializedSetup[j], serializedSetup[j + 1]);
+        j += 2;
+
+        setup.cmS1 = Bn254.newG1Checked(serializedSetup[j], serializedSetup[j + 1]);
+        j += 2;
+
+        setup.cmS2 = Bn254.newG1Checked(serializedSetup[j], serializedSetup[j + 1]);
+        j += 2;
+
+        setup.cmS3 = Bn254.newG1Checked(serializedSetup[j], serializedSetup[j + 1]);
+    }
 
     function deserializeProof(uint256 publicInputs, uint256[] memory serializedProof)
         internal
@@ -78,6 +124,44 @@ contract VerifierWithDeserialize is InternalVerifier {
         proof.proof2 = Bn254.newG1Checked(serializedProof[j], serializedProof[j + 1]);
     }
 
+    function verifyInitial(
+        State memory state,
+        Proof memory proof,
+        Setup memory setup
+    ) internal view {
+        Transcript memory transcript = Update.newTranscript();
+
+        transcript.updateG1(proof.cmA);
+        transcript.updateG1(proof.cmB);
+        transcript.updateG1(proof.cmC);
+
+        state.beta = transcript.getChallenge();
+        state.gamma = transcript.getChallenge();
+
+        transcript.updateG1(proof.cmZ);
+        state.alpha = transcript.getChallenge();
+
+        transcript.updateG1(proof.cmT1);
+        transcript.updateG1(proof.cmT2);
+        transcript.updateG1(proof.cmT3);
+
+        state.xi = transcript.getChallenge();
+
+        transcript.updateFr(proof.a_xi);
+        transcript.updateFr(proof.b_xi);
+        transcript.updateFr(proof.c_xi);
+        transcript.updateFr(proof.s1_xi);
+        transcript.updateFr(proof.s2_xi);
+        transcript.updateFr(proof.z_xi);
+
+        state.v = transcript.getChallenge();
+        transcript.updateG1(proof.proof1);
+        transcript.updateG1(proof.proof2);
+        state.u = transcript.getChallenge();
+
+        initState(state, proof, setup);
+    }
+
     function verifyCommitments(
         State memory state,
         Proof memory proof,
@@ -94,7 +178,7 @@ contract VerifierWithDeserialize is InternalVerifier {
     function verify(Proof memory proof, Setup memory setup) internal view returns (bool) {
         State memory state;
 
-        initState(state, proof, setup);
+        verifyInitial(state, proof, setup);
 
         return verifyCommitments(state, proof, setup);
     }
