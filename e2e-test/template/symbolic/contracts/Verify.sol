@@ -19,7 +19,7 @@ contract Verifier is InternalVerifier {
         pure
         returns (Setup memory setup)
     {
-        require(serializedSetup.length == 24);
+        require(serializedSetup.length == 25);
 
         uint256 j = 0;
 
