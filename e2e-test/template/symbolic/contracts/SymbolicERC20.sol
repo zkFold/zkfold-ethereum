@@ -24,25 +24,30 @@ contract SymbolicERC20 {
     // setup
     Setup setup;
 
+    // verifier
+    Verifier verifier;
+
     // Initialize the transfer
     constructor(
         address _l1RewardCreator,
         address _l1Withdraw,
         address _l1Token,
         uint256 _amountWithdraw,
-        uint256[] _setup
+        uint256[] memory _setup,
+        Verifier _verifier
     ) {
         l1RewardCreator = _l1RewardCreator;
         l1Withdraw = _l1Withdraw;
         l1Token = IERC20(_l1Token);
         amountWithdraw = _amountWithdraw;
-        setup = Verifier.deserializeSetup(_setup);
+        verifier = _verifier;
+        setup = verifier.deserializeSetup(_setup);
     }
 
     // Withdraw receiver funds
-    function withdraw(uint256 _publicInput, uint256[] _proof) external payable {
-       Proof memory proof = Verifier.deserializeProof(_publicInput, _proof);
-       if(Verifier.verify(proof, setup)) {
+    function withdraw(uint256 _publicInput, uint256[] memory _proof) external payable {
+       Proof memory proof = verifier.deserializeProof(_publicInput, _proof);
+       if(verifier.verify(proof, setup)) {
            bool sent = l1Token.transferFrom(l1RewardCreator, l1Withdraw, amountWithdraw);
            require(sent, "Token transfer failed");
        }
