@@ -1,0 +1,17 @@
+
+index-state:
+  , hackage.haskell.org 2024-09-23T15:45:50Z
+
+source-repository-package
+  type: git
+  location: https://github.com/zkFold/zkfold-base.git
+  tag: 45b90cdc4a5befe6fd59525b10b2fdc3116dd18f
+
+packages: .
+
+write-ghc-environment-files: never
+
+tests: true
+benchmarks: true
+
+test-show-details: direct
