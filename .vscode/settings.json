@@ -1,0 +1,5 @@
+{
+  "haskell.manageHLS": "GHCup",
+  "haskell.formattingProvider": "stylish-haskell",
+  "rust-analyzer.check.command": "clippy"
+}
