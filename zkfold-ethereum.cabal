@@ -49,12 +49,12 @@ executable prover
     zkfold-base                    ,
     QuickCheck                     ,
 
-executable setup-to-verify
+executable setup
   import:           lang
   default-language: GHC2021
   ghc-options:      -rtsopts
   main-is:          Main.hs
-  hs-source-dirs:   backends/setup-to-verify
+  hs-source-dirs:   backends/setup
   build-depends:
     aeson                          ,
     base              >= 4.9 && < 5,
