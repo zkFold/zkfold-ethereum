@@ -70,6 +70,8 @@ contract InternalVerifier {
     using Bn254 for G1Point;
     using Bn254 for G2Point;
 
+    using Update for Transcript;
+
     function initState(
         State memory state,
         Proof memory proof,
@@ -277,4 +279,56 @@ contract InternalVerifier {
 
         return Bn254.pairing(p1, p2, setup.x2);
     }
+
+    function verifyInitial(
+        State memory state,
+        Proof memory proof,
+        Setup memory setup
+    ) internal view {
+        Transcript memory transcript = Update.newTranscript();
+
+        transcript.updateG1(proof.cmA);
+        transcript.updateG1(proof.cmB);
+        transcript.updateG1(proof.cmC);
+
+        state.beta = transcript.getChallenge();
+        state.gamma = transcript.getChallenge();
+
+        transcript.updateG1(proof.cmZ);
+        state.alpha = transcript.getChallenge();
+
+        transcript.updateG1(proof.cmT1);
+        transcript.updateG1(proof.cmT2);
+        transcript.updateG1(proof.cmT3);
+
+        state.xi = transcript.getChallenge();
+
+        transcript.updateFr(proof.a_xi);
+        transcript.updateFr(proof.b_xi);
+        transcript.updateFr(proof.c_xi);
+        transcript.updateFr(proof.s1_xi);
+        transcript.updateFr(proof.s2_xi);
+        transcript.updateFr(proof.z_xi);
+
+        state.v = transcript.getChallenge();
+        transcript.updateG1(proof.proof1);
+        transcript.updateG1(proof.proof2);
+        state.u = transcript.getChallenge();
+
+        initState(state, proof, setup);
+    }
+
+    function verifyCommitments(
+        State memory state,
+        Proof memory proof,
+        Setup memory setup
+    ) internal view returns (bool) {
+        Fr memory r0 = makeR0(state, proof);
+        G1Point memory d = makeD(state, proof, setup);
+        G1Point memory f = makeF(state, proof, setup, d);
+        G1Point memory e = makeE(state, proof, r0);
+
+        return isValidPairing(state, proof, setup, f, e);
+    }
+
 }
