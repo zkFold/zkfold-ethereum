@@ -6,57 +6,28 @@ export default buildModule("Symbolic", (m) => {
   const l1Token = m.contract("SymbolicToken", ["Saturn V"]);
   const amountWithdraw = 1000;
   const setup = "../assets/setup";
-  const verifier = m.contract("Verify", ["Saturn V"]);
+  const proof = "../assets/proof";
   
-  const symbolic = m.contract("Symbolic", [l1RewardCreator, l1Withdraw, l1Token, amountWithdraw, setup, verifier], {
-    value: 1_000_000_000n, // send ETH to the constructor
+  const symbolic = m.contract("Symbolic", [l1RewardCreator, l1Withdraw, l1Token, amountWithdraw, setup], {
+    value: 1_000_000_000n, // fee transaction
   });
+
+  const queue = m.contract("Queue", [symbolic]);
+
+  const verifier = m.contract("Verifier", [setup], {
+    value: 1_000_000_000n, // send ETH
+  });
+
+  m.call(queue, "appendTransaction", [verifier]);
+
+  const computeHash = m.call(queue, "computeHash", []);
+  const hash = m.readEventArgument(computeHash, "Transfer", "_hash");
+
+  m.call(symbolic, "commitBatch", [hash]);
+
+  m.call(symbolic, "messageWithProof", [l1RewardCreator, l1Withdraw, amountWithdraw, proof]);
+
+  m.call(symbolic, "withdraw", [verifier, proof]);
 
   return { symbolic };
 });
-
-/*
-
-export default buildModule("Apollo", (m) => {
-  const apollo = m.contract("Rocket", ["Saturn V"]);
-
-  m.call(apollo, "launch", []);
-
-  const existingToken = m.contractAt("Token", "0x...");
-  
-  const balance = m.staticCall(token, "balanceOf", [address]);
-
-  // Reading values from events
-  const transfer = m.call(token, "transfer", [receiver, amount]);
-  const value = m.readEventArgument(transfer, "Transfer", "_value");
-
-  const send = m.send("SendingEth", address, 1_000_000n);
-  const send = m.send("SendingData", address, undefined, "0x16417104");
-
-  const myLib = m.library("MyLib");
-  const myContract = m.contract("MyContract", [], {
-    libraries: {
-      MyLib: myLib,
-    },
-  });
-
-  const token = m.contract("Token", ["My Token", "TKN", 18]);
-
-  const receiver = m.contract("Receiver", [], {
-    after: [token], // `receiver` is deployed after `token`
-  });
-
-  const apollo = m.contract("Rocket", [m.getParameter("name", "Saturn V")]);
-
-  const { token } = m.useModule(TokenModule);
-
-  const owner = m.contract("TokenOwner", [token]);
-  m.call(token, "transferOwnership", [owner]);
-
-  const account1 = m.getAccount(1);
-  const token = m.contract("Token", ["My Token", "TKN2", 18], { from: account1 });
-  
-  return { apollo };
-});
-
-*/
