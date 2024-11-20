@@ -1,6 +1,6 @@
-const { buildModule } = require("@nomicfoundation/hardhat-ignition/modules");
+import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
 
-module.exports = buildModule("Symbolic", (m) => {
+export default buildModule("Symbolic", (m) => {
   const l1RewardCreator = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
   const l1Withdraw = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
   const l1Token = m.contract("SymbolicToken", ["Saturn V"]);
@@ -8,7 +8,7 @@ module.exports = buildModule("Symbolic", (m) => {
   const setup = "../assets/setup";
   const verifier = m.contract("Verify", ["Saturn V"]);
   
-  const symbolic = m.contract("SymbolicERC20", [l1RewardCreator, l1Withdraw, l1Token, amountWithdraw, setup, verifier], {
+  const symbolic = m.contract("Symbolic", [l1RewardCreator, l1Withdraw, l1Token, amountWithdraw, setup, verifier], {
     value: 1_000_000_000n, // send ETH to the constructor
   });
 

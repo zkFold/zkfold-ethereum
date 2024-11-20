@@ -1,6 +1,6 @@
-const { buildModule } = require("@nomicfoundation/hardhat-ignition/modules");
+import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
 
-module.exports = buildModule("Verify", (m) => {
+export default buildModule("Verify", (m) => {
 
   const bn254 = m.library("Bn254");
   const internalVerifier = m.library("InternalVerifier");
