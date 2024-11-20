@@ -43,13 +43,6 @@ contract Symbolic {
         messenger = _messenger;
     }
 
-    function deposit(address from, address to, uint256 amount, bytes calldata data) external payable {
-    }
-
-    function newTransfer(address from_account, IERC20 token, address to_account) external payable {
-
-    }
-
     // Withdraw receiver funds
     function withdraw(IVerifier verifer, bytes calldata proof, uint256[] calldata public_inputs) external payable {
         // from_account token full_amount to_address
