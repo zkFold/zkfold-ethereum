@@ -1,4 +1,4 @@
-module Main where
+module Utils where
 
 import           Prelude                                  (IO, putStr, show, ($), (++), (.), (<$>))
 import           Prelude                               (FilePath, IO, Maybe (..), Show (..), putStr, ($),
@@ -30,21 +30,21 @@ import           ZkFold.Symbolic.Compiler                    (ArithmeticCircuit 
 import           ZkFold.Symbolic.Data.Bool                   (Bool (..))
 import           ZkFold.Symbolic.Data.Eq                     (Eq (..))
 import           ZkFold.Symbolic.Data.FieldElement
-import Utils
 
-equalityCheckContract :: forall a c . (Symbolic c, FromConstant a (BaseField c)) => a -> FieldElement c -> Bool c
-equalityCheckContract targetValue inputValue = inputValue == fromConstant targetValue
 
-main :: IO ()
-main = do
-  x           <- generate arbitrary
-  ps          <- generate arbitrary
-  targetValue <- generate arbitrary
+data EqualityCheckContract = EqualityCheckContract {
+    x           :: Fr
+  , ps          :: PlonkupProverSecret BN254_G1
+  , targetValue :: Fr
+} deriving stock (Show, Generic)
+  deriving anyclass (ToJSON, FromJSON)
 
-  createDirectoryIfMissing Haskell.True "../test-data"
+deriving anyclass instance FromJSON (V.Vector 19 Fr)
 
-  let contract = EqualityCheckContract x ps targetValue
-  BL.writeFile "../test-data/plonk-raw-contract-data.json" $ encode contract
+deriving anyclass instance ToJSON   (PlonkupProverSecret BN254_G1)
+deriving anyclass instance FromJSON (PlonkupProverSecret BN254_G1)
 
-  let ac = equalityCheckContract @Fr @(ArithmeticCircuit Fr (Vector 1)) targetValue
-  compileIOWith "../test-data/equalityCheckContract" forceOne ac
+mkSetup = undefined
+mkInput = undefined
+mkProof = undefined
+

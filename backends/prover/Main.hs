@@ -16,6 +16,8 @@ import           ZkFold.Symbolic.Compiler                    (ArithmeticCircuit 
 import           ZkFold.Symbolic.Data.Bool                   (Bool (..))
 import           ZkFold.Symbolic.Data.Eq                     (Eq (..))
 import           ZkFold.Symbolic.Data.FieldElement
+import Utils
+
 
 targetToProve :: 
      EqualityCheckContract
@@ -31,22 +33,9 @@ targetToProve (EqualityCheckContract x ps targetValue) ac =
 
     in (mkInput input, mkProof proof)
 
-data EqualityCheckContract = EqualityCheckContract {
-    x           :: Fr
-  , ps          :: PlonkupProverSecret BN254_G1
-  , targetValue :: Fr
-} deriving stock (Show, Generic)
-  deriving anyclass (ToJSON, FromJSON)
-
-deriving anyclass instance FromJSON (V.Vector 19 Fr)
-
-deriving anyclass instance ToJSON   (PlonkupProverSecret BN254_G1)
-deriving anyclass instance FromJSON (PlonkupProverSecret BN254_G1)
-
 main :: IO ()
 main = do
   contract <- decode @EqualityCheckContract =<< BL.readFile "../test-data/plonk-raw-contract-data.json"
-  
   ac <- readFileJSON "../test-data/equalityCheckContract"
 
   let (input, proof) = targetToProve contract ac
@@ -54,5 +43,4 @@ main = do
   createDirectoryIfMissing True "../assets"
   
   BS.writeFile "../assets/input" $ fromString $ show $ input
-
   BS.writeFile "../assets/proof" $ fromString $ show proof
