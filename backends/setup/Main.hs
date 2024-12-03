@@ -16,39 +16,28 @@ import           ZkFold.Symbolic.Compiler                    (ArithmeticCircuit 
 import           ZkFold.Symbolic.Data.Bool                   (Bool (..))
 import           ZkFold.Symbolic.Data.Eq                     (Eq (..))
 import           ZkFold.Symbolic.Data.FieldElement
+import Utils
 
-equalityCheckVerificationBytes :: 
+
+targetToSetup :: 
      Fr
   -> PlonkupProverSecret BN254_G1
   -> Fr
   -> ArithmeticCircuit Fr (Vector 1) (Vector 1)
   -> SetupBytes
-equalityCheckVerificationBytes x ps targetValue ac =
+targetToSetup x ps targetValue ac =
     let (omega, k1, k2) = getParams 32
         plonk   = Plonk omega k1 k2 ac x :: PlonkN 1 32
         setupV  = setupVerify @_ @HaskellCore plonk
 
     in mkSetup setupV
 
-data EqualityCheckContract = EqualityCheckContract {
-    x           :: Fr
-  , ps          :: PlonkupProverSecret BN254_G1
-  , targetValue :: Fr
-} deriving stock (Show, Generic)
-  deriving anyclass (ToJSON, FromJSON)
-
-deriving anyclass instance FromJSON (V.Vector 19 Fr)
-
-deriving anyclass instance ToJSON   (PlonkupProverSecret BN254_G1)
-deriving anyclass instance FromJSON (PlonkupProverSecret BN254_G1)
-
 main :: IO ()
 main = do
   contract <- decode @EqualityCheckContract =<< BL.readFile "../test-data/plonk-raw-contract-data.json"
-  
   ac <- readFileJSON "../test-data/equalityCheckContract"
 
-  let setup = targetToProve contract ac
+  let setup = targetToSetup contract ac
   
   createDirectoryIfMissing True "../assets"
   

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
@@ -33,37 +32,22 @@ func (circuit *Circuit) Define(api frontend.API) error {
 
 func main() {
 
+	// import "../assets/setup"
+	// hmmm import "../assets/kzg.SRS" ???
+	// hmmm import "../assets/srsLagrange" ???
+
 	var circuit Circuit
 
-	// // building the circuit...
-	ccs, err := frontend.Compile(ecc.BN254.ScalarField(), scs.NewBuilder, &circuit)
-	if err != nil {
-		fmt.Println("circuit compilation error")
-	}
+	ccs, _ := frontend.Compile(ecc.BN254.ScalarField(), scs.NewBuilder, &circuit)
 
-	// create the necessary data for KZG.
-	// This is a toy example, normally the trusted setup to build ZKG
-	// has been run before.
-	// The size of the data in KZG should be the closest power of 2 bounding //
-	// above max(nbConstraints, nbVariables).
 	scs := ccs.(*cs.SparseR1CS)
-	srs, srsLagrange, err := unsafekzg.NewSRS(scs)
-	if err != nil {
-		panic(err)
-	}
+	srs, srsLagrange, _ := unsafekzg.NewSRS(scs)
 
-	{
-		// w.X = 4
-		// w.Y = 4
+	_, vk, _ := plonk.Setup(ccs, srs, srsLagrange)
 
-		_, vk, _ := plonk.Setup(ccs, srs, srsLagrange)
+	fSolidity, _ := os.Create(filepath.Join("..", "..", "e2e-test", "template", "symbolic", "contracts", "Verifier.sol"))
 
-		// fmt.Println(vk)
+	vk.ExportSolidity(fSolidity)
 
-		fSolidity, _ := os.Create(filepath.Join("..", "..", "e2e-test", "template", "symbolic", "contracts", "Verifier.sol"))
-
-		vk.ExportSolidity(fSolidity)
-
-		fSolidity.Close()
-	}
+	fSolidity.Close()
 }

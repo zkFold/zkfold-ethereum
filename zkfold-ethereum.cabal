@@ -20,6 +20,21 @@ common lang
       -- -Wunused-packages
       -Wmissing-deriving-strategies
 
+library src
+  import:           lang
+  default-language: GHC2021
+  ghc-options:      -rtsopts
+  main-is:          Main.hs
+  hs-source-dirs:   backends/src
+  build-depends:
+    aeson                          ,
+    base              >= 4.9 && < 5,
+    bytestring                     ,
+    cborg                          ,
+    directory                      ,
+    zkfold-base                    ,
+    QuickCheck                     ,
+
 executable circuit
   import:           lang
   default-language: GHC2021
